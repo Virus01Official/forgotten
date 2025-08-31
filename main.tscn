@@ -1,0 +1,216 @@
+[gd_scene load_steps=23 format=3 uid="uid://ce6jx278866ft"]
+
+[ext_resource type="Script" uid="uid://dao8vyqc7570v" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://td2aos3g2ybu" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="AudioStream" uid="uid://charlbmdvbvp5" path="res://assets/music/vanity.mp3" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://bn07hp3f0gve8" path="res://assets/textures/sky/sky_14_2k.png" id="2_5vw27"]
+[ext_resource type="Script" uid="uid://c7jdlqqpfmhyw" path="res://shedletsky.gd" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://b41t3a4i8y0rd" path="res://spike.tscn" id="4_kek77"]
+[ext_resource type="Script" uid="uid://d2mah02jjgwfa" path="res://doe.gd" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://ju6pk3kckw4l" path="res://testing_map.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://7e060fe6n4xy" path="res://generators.tscn" id="7_272bh"]
+[ext_resource type="PackedScene" uid="uid://dem4m4271kwut" path="res://medkit.tscn" id="10_4c57u"]
+[ext_resource type="PackedScene" uid="uid://csf2dnn41mkhl" path="res://cola.tscn" id="11_efxa6"]
+[ext_resource type="PackedScene" uid="uid://dtfhe5bvdoaqe" path="res://testingONly/server_menu.tscn" id="12_dg77c"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_kek77"]
+panorama = ExtResource("2_5vw27")
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("PanoramaSkyMaterial_kek77")
+process_mode = 1
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+reflected_light_source = 2
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2yge"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1bvp3"]
+material = SubResource("ShaderMaterial_272bh")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_onrkg"]
+albedo_color = Color(1, 0, 0, 0.407843)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7mycd"]
+material = SubResource("StandardMaterial3D_onrkg")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_272bh"]
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_h2yge")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="player" parent="." groups=["players"] instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97463, 0)
+spike_scene = ExtResource("4_kek77")
+malice = 100
+selectedKiller = "Slasher"
+metadata/Type = "Shedletsky"
+
+[node name="LMS" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_0xm2m")
+volume_db = -10.0
+autoplay = true
+
+[node name="Shedletsky" type="CharacterBody3D" parent="." groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.94899, 2.06208, 0)
+script = ExtResource("4_1bvp3")
+metadata/Type = "Shedletsky"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky"]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="hitbox" type="Area3D" parent="Shedletsky"]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky/hitbox"]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky/hitbox"]
+mesh = SubResource("BoxMesh_7mycd")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Shedletsky2" type="CharacterBody3D" parent="." groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.513406, 2.06208, 0)
+script = ExtResource("4_1bvp3")
+metadata/Type = "Shedletsky"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky2"]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky2/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="hitbox" type="Area3D" parent="Shedletsky2"]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky2/hitbox"]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky2/hitbox"]
+visible = false
+mesh = SubResource("BoxMesh_7mycd")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Shedletsky3" type="CharacterBody3D" parent="." groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.689941, 2.06208, 0)
+script = ExtResource("4_1bvp3")
+metadata/Type = "Shedletsky"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky3"]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky3/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="hitbox" type="Area3D" parent="Shedletsky3"]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky3/hitbox"]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky3/hitbox"]
+visible = false
+mesh = SubResource("BoxMesh_7mycd")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Shedletsky4" type="CharacterBody3D" parent="." groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.755142, 2.06208, 0)
+script = ExtResource("4_1bvp3")
+metadata/Type = "Shedletsky"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky4"]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky4/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="hitbox" type="Area3D" parent="Shedletsky4"]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Shedletsky4/hitbox"]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Shedletsky4/hitbox"]
+visible = false
+mesh = SubResource("BoxMesh_7mycd")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Doe" type="CharacterBody3D" parent="." groups=["players"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.56205, 2.06208, 0)
+script = ExtResource("5_lquwl")
+metadata/Type = "1x"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doe"]
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doe/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_1bvp3")
+
+[node name="hitbox" type="Area3D" parent="Doe"]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Doe/hitbox"]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Doe/hitbox"]
+visible = false
+mesh = SubResource("BoxMesh_7mycd")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
+[node name="TestingMap" parent="." instance=ExtResource("6_7mycd")]
+
+[node name="generators" parent="TestingMap" instance=ExtResource("7_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.69, 0.582015, -11.8917)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_272bh")
+
+[node name="IntroCam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.723099, 9.845861, 0)
+
+[node name="VicCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.162842, 9.845861, 0)
+
+[node name="IntermissionTimer" type="Timer" parent="."]
+
+[node name="medkit" parent="." groups=["items"] instance=ExtResource("10_4c57u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8800633, -11.93846)
+
+[node name="cola" parent="." groups=["items"] instance=ExtResource("11_efxa6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8721933, 1.4601722, -13.249439)
+
+[node name="voicelines" type="AudioStreamPlayer" parent="."]
+
+[node name="RoundTimer" type="Timer" parent="."]
+
+[node name="serverMenu" parent="." instance=ExtResource("12_dg77c")]
+
+[connection signal="body_entered" from="Shedletsky/hitbox" to="Shedletsky" method="_on_hitbox_body_entered"]
+[connection signal="body_entered" from="Doe/hitbox" to="Doe" method="_on_hitbox_body_entered"]

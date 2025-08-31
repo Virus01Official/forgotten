@@ -1,0 +1,109 @@
+[gd_scene load_steps=16 format=3 uid="uid://td2aos3g2ybu"]
+
+[ext_resource type="Script" uid="uid://bm6pt5suq3483" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Shader" uid="uid://dqdjklx5p0wss" path="res://assets/shaders/new_shader.gdshader" id="2_i3pqv"]
+[ext_resource type="PackedScene" uid="uid://dmkdbm00urds" path="res://gui.tscn" id="2_onrkg"]
+[ext_resource type="PackedScene" uid="uid://c6h241gggutip" path="res://shop.tscn" id="4_hqtel"]
+[ext_resource type="PackedScene" uid="uid://cbgjse35iov5n" path="res://inventory.tscn" id="5_sweqy"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4flbx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
+render_priority = 0
+shader = ExtResource("2_i3pqv")
+shader_parameter/scale = 1.0
+shader_parameter/outline_spread = 1.0
+shader_parameter/_Color = Color(0, 0, 0, 1)
+shader_parameter/_DepthNormalThreshold = 0.06
+shader_parameter/_DepthNormalThresholdScale = 3.0
+shader_parameter/_DepthThreshold = 1.5
+shader_parameter/_NormalThreshold = 0.06
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hqtel"]
+material = SubResource("ShaderMaterial_7mycd")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_onrkg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_onrkg"]
+albedo_color = Color(1, 0, 0, 0.407843)
+
+[sub_resource type="BoxMesh" id="BoxMesh_onrkg"]
+material = SubResource("StandardMaterial3D_onrkg")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_i3pqv"]
+
+[sub_resource type="Animation" id="Animation_hqtel"]
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape3D/MeshInstance3D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sweqy"]
+_data = {
+&"RESET": SubResource("Animation_hqtel")
+}
+
+[node name="player" type="CharacterBody3D"]
+script = ExtResource("1_4flbx")
+metadata/Type = ""
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_sh265")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_4flbx")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.919486, 0.393124, 0, -0.393124, 0.919486, 0, 1.61234, 2.49815)
+fov = 37.8493
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 0.0509764, -0.9987, 0, 0.9987, 0.0509764, 0, -0.060737, -1.07594)
+mesh = SubResource("PlaneMesh_hqtel")
+
+[node name="GUI" parent="." instance=ExtResource("2_onrkg")]
+
+[node name="hitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="hitbox"]
+shape = SubResource("BoxShape3D_onrkg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="hitbox"]
+visible = false
+mesh = SubResource("BoxMesh_onrkg")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -2.71405e-07, -0.999999, 0, 6.20903, -4.37114e-08, 0, 0.523592, -0.353017)
+hit_from_inside = true
+
+[node name="interactionRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1.31301e-07, -1, 0, 3.00383, -4.37114e-08, 0, -0.54771304, 0)
+hit_from_inside = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_i3pqv")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_sweqy")
+}
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.45022312, -0.8929161, 0, 0.8929161, -0.45022312, 0, 0, 0)
+
+[node name="Shop" parent="." instance=ExtResource("4_hqtel")]
+visible = false
+
+[node name="Inventory" parent="." instance=ExtResource("5_sweqy")]
+visible = false
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
