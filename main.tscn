@@ -1,17 +1,14 @@
-[gd_scene load_steps=23 format=3 uid="uid://ce6jx278866ft"]
+[gd_scene load_steps=20 format=3 uid="uid://ce6jx278866ft"]
 
 [ext_resource type="Script" uid="uid://dao8vyqc7570v" path="res://main.gd" id="1_h2yge"]
-[ext_resource type="PackedScene" uid="uid://td2aos3g2ybu" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="AudioStream" uid="uid://charlbmdvbvp5" path="res://assets/music/vanity.mp3" id="2_0xm2m"]
 [ext_resource type="Texture2D" uid="uid://bn07hp3f0gve8" path="res://assets/textures/sky/sky_14_2k.png" id="2_5vw27"]
 [ext_resource type="Script" uid="uid://c7jdlqqpfmhyw" path="res://shedletsky.gd" id="4_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://b41t3a4i8y0rd" path="res://spike.tscn" id="4_kek77"]
 [ext_resource type="Script" uid="uid://d2mah02jjgwfa" path="res://doe.gd" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ju6pk3kckw4l" path="res://testing_map.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://7e060fe6n4xy" path="res://generators.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://dem4m4271kwut" path="res://medkit.tscn" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://csf2dnn41mkhl" path="res://cola.tscn" id="11_efxa6"]
-[ext_resource type="PackedScene" uid="uid://dtfhe5bvdoaqe" path="res://testingONly/server_menu.tscn" id="12_dg77c"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_kek77"]
 panorama = ExtResource("2_5vw27")
@@ -55,13 +52,6 @@ environment = SubResource("Environment_0xm2m")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 shadow_enabled = true
-
-[node name="player" parent="." groups=["players"] instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97463, 0)
-spike_scene = ExtResource("4_kek77")
-malice = 100
-selectedKiller = "Slasher"
-metadata/Type = "Shedletsky"
 
 [node name="LMS" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_0xm2m")
@@ -209,8 +199,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8721933, 1.4601722, -13.249
 [node name="voicelines" type="AudioStreamPlayer" parent="."]
 
 [node name="RoundTimer" type="Timer" parent="."]
-
-[node name="serverMenu" parent="." instance=ExtResource("12_dg77c")]
 
 [connection signal="body_entered" from="Shedletsky/hitbox" to="Shedletsky" method="_on_hitbox_body_entered"]
 [connection signal="body_entered" from="Doe/hitbox" to="Doe" method="_on_hitbox_body_entered"]

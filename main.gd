@@ -40,12 +40,58 @@ var default_song = preload("res://assets/music/vanity.mp3")
 
 func _ready() -> void:
 	Gamedata.load_progress()
+	_spawn_player(1)
+	
+	GDSync.connected.connect(connected)
+	GDSync.connection_failed.connect(connection_failed)
+	
+	GDSync.lobby_created.connect(lobby_created)
+	GDSync.lobby_creation_failed.connect(lobby_creation_failed)
+	
+	GDSync.lobby_joined.connect(lobby_joined)
+	GDSync.lobby_join_failed.connect(lobby_join_failed)
+
+	GDSync.start_multiplayer()
+
 	start_round()
-	Network.create_server(1234)
-	Network.create_client("127.0.0.1", 1234)
+	
+func connected() -> void:
+	print("connected")
+	
+	GDSync.lobby_create("test")
+	
+func connection_failed(error : int) -> void:
+	match(error):
+		ENUMS.CONNECTION_FAILED.INVALID_PUBLIC_KEY:
+			push_error("The public or private key are invalid")
+		ENUMS.CONNECTION_FAILED.TIMEOUT:
+			push_error("Unable to connect, please check your internet connection")
 	
 func _on_round_end():
 	Gamedata.save_progress()
+
+func lobby_created(lobby_name : String) -> void:
+	print("Created lobby ", lobby_name)
+	
+	GDSync.lobby_join(lobby_name)
+	
+func lobby_joined(lobby_name : String) -> void:
+	print("Joined lobby ", lobby_name)
+	
+func lobby_join_failed(lobby_name : String, error : int) -> void:
+	print("Failed to join lobby ", lobby_name, " ", error)
+
+func lobby_creation_failed(lobby_name : String, error : int) -> void:
+	print("Failed to create lobby ", lobby_name)
+	
+	if error == ENUMS.LOBBY_CREATION_ERROR.LOBBY_ALREADY_EXISTS:
+		GDSync.lobby_join(lobby_name)
+		
+@rpc("any_peer", "call_local")
+func set_killer(player_name: String):
+	var killer = get_node_or_null(player_name)
+	if killer:
+		killer.isKiller = true
 
 func _physics_process(_delta: float) -> void:
 	var killers := []
@@ -85,7 +131,32 @@ func _physics_process(_delta: float) -> void:
 		else:
 			$LMS.stream = default_song
 		$LMS.play()
-		
+
+@rpc("any_peer")
+func _spawn_player(id: int):
+	print("SPAWN: creating player for id=", id, " | my id=", multiplayer.get_unique_id())
+
+	var player = preload("res://player.tscn").instantiate()
+	player.name = str(id)  # name must match the peer ID
+	player.set_multiplayer_authority(id)
+
+	# VERY IMPORTANT: replicate this node to all clients
+	add_child(player, true)
+
+	# Only give this client control over its own camera
+	if id == multiplayer.get_unique_id():
+		var cam = player.find_child("Camera3D", true, false)
+		if cam:
+			cam.current = true
+	
+@rpc("any_peer", "call_local")
+func play_music(track: String):
+	if track in killer_songs:
+		$LMS.stream = killer_songs[track]
+	else:
+		$LMS.stream = default_song
+	$LMS.play()
+	
 func play_intro_line(killer: String):
 	if Gamedata.killer_voicelines["intro"].has(killer):
 		var lines = Gamedata.killer_voicelines["intro"][killer]
@@ -95,21 +166,26 @@ func play_intro_line(killer: String):
 			$IntroAudio.play()
 	
 func start_round() -> void:
+	if not multiplayer.is_server():
+		return  # only server assigns roles
+
 	var players = get_tree().get_nodes_in_group("players")
 	if players.is_empty():
 		return
 	
-	# Reset all players first
+	# reset
 	for player in players:
 		player.isKiller = false
 	
-	# Find the player with the most malice
+	# find killer
 	var killer = players[0]
 	for player in players:
-		if player.malice > killer.malice:
+		#if player.malice > killer.malice:
 			killer = player
-	
-	# Assign killer role
+
 	killer.isKiller = true
-	
+
 	print(killer.name, " is the killer for this round with malice: ", killer.malice)
+
+	# 👇 tell clients who the killer is
+	rpc("set_killer", killer.name)

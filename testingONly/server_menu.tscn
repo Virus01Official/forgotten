@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dtfhe5bvdoaqe"]
+[gd_scene load_steps=2 format=3 uid="uid://dtfhe5bvdoaqe"]
+
+[ext_resource type="Script" uid="uid://cae85w53dictg" path="res://testingONly/server_menu.gd" id="1_25yrj"]
 
 [node name="serverMenu" type="Control"]
 layout_mode = 3
@@ -7,8 +9,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_25yrj")
 
-[node name="Button" type="Button" parent="."]
+[node name="HostButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 476.0
 offset_top = 78.0
@@ -16,10 +19,21 @@ offset_right = 574.0
 offset_bottom = 109.0
 text = "Host Server"
 
-[node name="Button2" type="Button" parent="."]
+[node name="JoinButton" type="Button" parent="."]
 layout_mode = 0
 offset_left = 476.0
 offset_top = 135.0
 offset_right = 574.0
 offset_bottom = 166.0
 text = "Join Server"
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 479.0
+offset_top = 16.0
+offset_right = 585.0
+offset_bottom = 47.0
+placeholder_text = "IP"
+
+[connection signal="pressed" from="HostButton" to="." method="_on_HostButton_pressed"]
+[connection signal="pressed" from="JoinButton" to="." method="_on_JoinButton_pressed"]

@@ -8,9 +8,16 @@
 
 config_version=5
 
+[GD-Sync]
+
+version="0.12"
+uniqueUsername=true
+publicKey="6393730a42b38db3"
+privateKey="de82a27d4ce5994f"
+
 [application]
 
-config/name="forsaken"
+config/name="forgotten"
 run/main_scene="uid://ce6jx278866ft"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
@@ -19,6 +26,7 @@ config/icon="res://icon.svg"
 
 Gamedata="*res://gamedata.gd"
 Network="*res://network.gd"
+GDSync="*res://addons/GD-Sync/MultiplayerClient.gd"
 
 [display]
 
@@ -29,6 +37,10 @@ window/stretch/mode="canvas_items"
 
 version_control/plugin_name="GitPlugin"
 version_control/autoload_on_startup=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/GD-Sync/plugin.cfg")
 
 [global_group]
 

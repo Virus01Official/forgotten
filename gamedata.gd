@@ -19,7 +19,8 @@ var shop_items := {
 			"kill": [
 				"res://assets/voicelines/envy/voiceline.mp3",
 				"res://assets/voicelines/envy/voiceline2.mp3",
-				"res://assets/voicelines/envy/voiceline3.mp3"
+				"res://assets/voicelines/envy/voiceline3.mp3",
+				"res://assets/voicelines/envy/becca_uwu.mp3"
 			],
 			"intro": [
 				"res://assets/voicelines/envy/intro1.mp3"
@@ -94,7 +95,8 @@ func init_default_voicelines() -> void:
 		killer_voicelines["kill"]["envy"] = [
 			load("res://assets/voicelines/envy/voiceline.mp3"),
 			load("res://assets/voicelines/envy/voiceline2.mp3"),
-			load("res://assets/voicelines/envy/voiceline3.mp3")
+			load("res://assets/voicelines/envy/voiceline3.mp3"),
+			load("res://assets/voicelines/envy/becca_uwu.mp3")
 		]
 
 	if not killer_voicelines["intro"].has("envy"):

@@ -110,8 +110,15 @@ var sprint_needs_reset: bool = false
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	add_to_group("players")
 
+@rpc("any_peer", "call_local")
+func set_position_sync(pos: Vector3):
+	global_transform.origin = pos
+	
 func _input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
 	if event is InputEventMouseMotion:
 		
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
@@ -128,6 +135,9 @@ func start_healing():
 	healingBar.max_value = heal_duration
 	
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+		
 	set_meta("Type", selectedSurvivor)
 		
 	if attacking:
