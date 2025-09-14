@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dem4m4271kwut"]
+[gd_scene load_steps=5 format=3 uid="uid://dem4m4271kwut"]
 
 [ext_resource type="Script" uid="uid://cjuawespb86ke" path="res://item.gd" id="1_7hg4a"]
+[ext_resource type="Script" uid="uid://83jjsegy40ip" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="2_22oi4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_p51vj"]
 
@@ -16,3 +17,13 @@ shape = SubResource("BoxShape3D_p51vj")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="medkit/CollisionShape3D"]
 mesh = SubResource("BoxMesh_7hg4a")
+
+[node name="PropertySynchronizer" type="Node" parent="medkit"]
+script = ExtResource("2_22oi4")
+node_path = NodePath("..")
+properties = PackedStringArray("global_position")
+interpolated = true
+interpolation_speed = 30.0
+extrapolated = false
+max_extrapolation_time = 0.2
+metadata/_custom_type_script = "uid://83jjsegy40ip"

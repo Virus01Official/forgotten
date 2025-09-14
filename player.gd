@@ -36,7 +36,7 @@ const STUN_DURATION: float = 2.0
 var health = 100
 var maxhealth = 100
 
-@onready var voiceline = $"../voicelines"
+@onready var voiceline = $"../../voicelines"
 
 var testVoiceline = preload("res://assets/voicelines/envy/voiceline.mp3")
 
@@ -111,14 +111,21 @@ var sprint_needs_reset: bool = false
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	add_to_group("players")
-
-@rpc("any_peer", "call_local")
-func set_position_sync(pos: Vector3):
-	global_transform.origin = pos
+	
+	GDSync.connect_gdsync_owner_changed(self, owner_changed)
+	
+	GDSync.expose_func(pickupObject)
+	
+func owner_changed(_owner_id : int) -> void:
+	var is_owner : bool = GDSync.is_gdsync_owner(self)
+	
+	camera.current = is_owner
+	GUI.visible = is_owner
 	
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
+		
 	if event is InputEventMouseMotion:
 		
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
@@ -135,7 +142,7 @@ func start_healing():
 	healingBar.max_value = heal_duration
 	
 func _physics_process(delta: float) -> void:
-	if not is_multiplayer_authority():
+	if not GDSync.is_gdsync_owner(self):
 		return
 		
 	set_meta("Type", selectedSurvivor)
@@ -181,16 +188,7 @@ func _physics_process(delta: float) -> void:
 			attack_timer = ATTACK_DURATION
 			damage = 20
 		else:
-			if held_object:
-				if held_object.name == "medkit":
-					start_healing()
-					held_object.used = true
-				elif held_object.name == "cola":
-					held_object.used = true
-					cola_active = true
-					cola_timer = COLA_DURATION
-					print("Cola activated: Speed boost for 15 seconds!")
-				held_object = null
+			pickupObject()
 		
 	elif Input.is_action_just_pressed("ability1") and not attacking:
 		if isKiller:
@@ -406,6 +404,18 @@ func apply_stun(duration: float = STUN_DURATION) -> void:
 			var random_line = lines[randi() % lines.size()]
 			voiceline.stream = random_line
 			voiceline.play()
+
+func pickupObject() -> void:
+	if held_object:
+		if held_object.name == "medkit":
+			start_healing()
+			held_object.used = true
+		elif held_object.name == "cola":
+			held_object.used = true
+			cola_active = true
+			cola_timer = COLA_DURATION
+			print("Cola activated: Speed boost for 15 seconds!")
+			held_object = null
 
 func spawn_spike():
 	if spike_scene == null:

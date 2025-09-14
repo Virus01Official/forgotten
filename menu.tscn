@@ -7,3 +7,30 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Button" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 367.0
+offset_top = 54.0
+offset_right = 666.0
+offset_bottom = 137.0
+text = "PLAY"
+
+[node name="Button2" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 367.0
+offset_top = 170.0
+offset_right = 666.0
+offset_bottom = 253.0
+text = "SETTINGS"
+
+[node name="Button3" type="Button" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 365.0
+offset_top = 298.0
+offset_right = 664.0
+offset_bottom = 381.0
+text = "QUIT"

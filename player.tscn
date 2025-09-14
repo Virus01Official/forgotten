@@ -1,10 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://td2aos3g2ybu"]
+[gd_scene load_steps=18 format=3 uid="uid://td2aos3g2ybu"]
 
 [ext_resource type="Script" uid="uid://bm6pt5suq3483" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Shader" uid="uid://dqdjklx5p0wss" path="res://assets/shaders/new_shader.gdshader" id="2_i3pqv"]
 [ext_resource type="PackedScene" uid="uid://dmkdbm00urds" path="res://gui.tscn" id="2_onrkg"]
 [ext_resource type="PackedScene" uid="uid://c6h241gggutip" path="res://shop.tscn" id="4_hqtel"]
 [ext_resource type="PackedScene" uid="uid://cbgjse35iov5n" path="res://inventory.tscn" id="5_sweqy"]
+[ext_resource type="Script" uid="uid://83jjsegy40ip" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="6_2hs0m"]
+[ext_resource type="Script" uid="uid://bjfy1ijgerl07" path="res://addons/GD-Sync/Scripts/Types/VoiceChat.gd" id="7_1jxqw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
 
@@ -68,8 +70,6 @@ fov = 37.8493
 transform = Transform3D(1, 0, 0, 0, 0.0509764, -0.9987, 0, 0.9987, 0.0509764, 0, -0.060737, -1.07594)
 mesh = SubResource("PlaneMesh_hqtel")
 
-[node name="GUI" parent="." instance=ExtResource("2_onrkg")]
-
 [node name="hitbox" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1.91149, 0, 0, 0, 1.86278, 0, 0, -0.297161)
 monitoring = false
@@ -105,6 +105,28 @@ transform = Transform3D(1, 0, 0, 0, -0.45022312, -0.8929161, 0, 0.8929161, -0.45
 visible = false
 
 [node name="Inventory" parent="." instance=ExtResource("5_sweqy")]
+visible = false
+
+[node name="PropertySynchronizer" type="Node" parent="."]
+script = ExtResource("6_2hs0m")
+broadcast = 2
+node_path = NodePath("..")
+properties = PackedStringArray("global_position")
+interpolated = true
+interpolation_speed = 30.0
+extrapolated = false
+max_extrapolation_time = 0.2
+metadata/_custom_type_script = "uid://83jjsegy40ip"
+
+[node name="VoiceChat" type="Node" parent="." node_paths=PackedStringArray("_output_player")]
+script = ExtResource("7_1jxqw")
+spatial_mode = 2
+_output_player = NodePath("../VC")
+metadata/_custom_type_script = "uid://bjfy1ijgerl07"
+
+[node name="VC" type="AudioStreamPlayer3D" parent="."]
+
+[node name="GUI" parent="." instance=ExtResource("2_onrkg")]
 visible = false
 
 [connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://csf2dnn41mkhl"]
+[gd_scene load_steps=5 format=3 uid="uid://csf2dnn41mkhl"]
 
 [ext_resource type="Script" uid="uid://cjuawespb86ke" path="res://item.gd" id="1_3ndp3"]
+[ext_resource type="Script" uid="uid://83jjsegy40ip" path="res://addons/GD-Sync/Scripts/Types/PropertySynchronizer.gd" id="2_qyc2d"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u5rml"]
 
@@ -16,3 +17,13 @@ shape = SubResource("CapsuleShape3D_u5rml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="cola/CollisionShape3D"]
 mesh = SubResource("CapsuleMesh_u5rml")
+
+[node name="PropertySynchronizer" type="Node" parent="cola"]
+script = ExtResource("2_qyc2d")
+node_path = NodePath("..")
+properties = PackedStringArray("global_position")
+interpolated = true
+interpolation_speed = 30.0
+extrapolated = false
+max_extrapolation_time = 0.2
+metadata/_custom_type_script = "uid://83jjsegy40ip"

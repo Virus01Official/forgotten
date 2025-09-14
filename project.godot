@@ -11,7 +11,7 @@ config_version=5
 [GD-Sync]
 
 version="0.12"
-uniqueUsername=true
+uniqueUsername=false
 publicKey="6393730a42b38db3"
 privateKey="de82a27d4ce5994f"
 
@@ -22,15 +22,17 @@ run/main_scene="uid://ce6jx278866ft"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+driver/enable_input=true
+
 [autoload]
 
 Gamedata="*res://gamedata.gd"
-Network="*res://network.gd"
 GDSync="*res://addons/GD-Sync/MultiplayerClient.gd"
 
 [display]
 
-window/size/mode=4
 window/stretch/mode="canvas_items"
 
 [editor]

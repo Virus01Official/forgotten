@@ -40,7 +40,7 @@ var default_song = preload("res://assets/music/vanity.mp3")
 
 func _ready() -> void:
 	Gamedata.load_progress()
-	_spawn_player(1)
+	#_spawn_player(1)
 	
 	GDSync.connected.connect(connected)
 	GDSync.connection_failed.connect(connection_failed)
@@ -78,8 +78,8 @@ func lobby_created(lobby_name : String) -> void:
 func lobby_joined(lobby_name : String) -> void:
 	print("Joined lobby ", lobby_name)
 	
-func lobby_join_failed(lobby_name : String, error : int) -> void:
-	print("Failed to join lobby ", lobby_name, " ", error)
+func lobby_join_failed(lobby_name : String, _error : int) -> void:
+	print("Failed to join lobby ", lobby_name)
 
 func lobby_creation_failed(lobby_name : String, error : int) -> void:
 	print("Failed to create lobby ", lobby_name)
@@ -131,23 +131,6 @@ func _physics_process(_delta: float) -> void:
 		else:
 			$LMS.stream = default_song
 		$LMS.play()
-
-@rpc("any_peer")
-func _spawn_player(id: int):
-	print("SPAWN: creating player for id=", id, " | my id=", multiplayer.get_unique_id())
-
-	var player = preload("res://player.tscn").instantiate()
-	player.name = str(id)  # name must match the peer ID
-	player.set_multiplayer_authority(id)
-
-	# VERY IMPORTANT: replicate this node to all clients
-	add_child(player, true)
-
-	# Only give this client control over its own camera
-	if id == multiplayer.get_unique_id():
-		var cam = player.find_child("Camera3D", true, false)
-		if cam:
-			cam.current = true
 	
 @rpc("any_peer", "call_local")
 func play_music(track: String):
@@ -166,9 +149,6 @@ func play_intro_line(killer: String):
 			$IntroAudio.play()
 	
 func start_round() -> void:
-	if not multiplayer.is_server():
-		return  # only server assigns roles
-
 	var players = get_tree().get_nodes_in_group("players")
 	if players.is_empty():
 		return
