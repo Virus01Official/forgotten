@@ -1,4 +1,8 @@
-[gd_scene format=3 uid="uid://cdm4chkh1inmu"]
+[gd_scene load_steps=4 format=3 uid="uid://cdm4chkh1inmu"]
+
+[ext_resource type="Script" uid="uid://bylmssgb7yhll" path="res://menu.gd" id="1_lti8b"]
+[ext_resource type="PackedScene" uid="uid://dx00vd8c6387g" path="res://GD-SyncTemplates/Accounts/create_account.tscn" id="2_ouk20"]
+[ext_resource type="PackedScene" uid="uid://b6v2t1l5wlcjk" path="res://GD-SyncTemplates/Accounts/login.tscn" id="3_mae5d"]
 
 [node name="menu" type="Control"]
 layout_mode = 3
@@ -7,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_lti8b")
 
 [node name="Button" type="Button" parent="."]
 visible = false
@@ -34,3 +39,11 @@ offset_top = 298.0
 offset_right = 664.0
 offset_bottom = 381.0
 text = "QUIT"
+
+[node name="CreateAccount" parent="." instance=ExtResource("2_ouk20")]
+visible = false
+layout_mode = 1
+
+[node name="Login" parent="." instance=ExtResource("3_mae5d")]
+visible = false
+layout_mode = 1

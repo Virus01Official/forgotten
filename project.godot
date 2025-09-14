@@ -18,7 +18,7 @@ privateKey="de82a27d4ce5994f"
 [application]
 
 config/name="forgotten"
-run/main_scene="uid://ce6jx278866ft"
+run/main_scene="uid://cdm4chkh1inmu"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -51,8 +51,6 @@ func _ready() -> void:
 	GDSync.lobby_joined.connect(lobby_joined)
 	GDSync.lobby_join_failed.connect(lobby_join_failed)
 
-	GDSync.start_multiplayer()
-
 	start_round()
 	
 func connected() -> void:
@@ -160,7 +158,7 @@ func start_round() -> void:
 	# find killer
 	var killer = players[0]
 	for player in players:
-		#if player.malice > killer.malice:
+		if player.malice > killer.malice:
 			killer = player
 
 	killer.isKiller = true

@@ -115,6 +115,7 @@ func _ready() -> void:
 	GDSync.connect_gdsync_owner_changed(self, owner_changed)
 	
 	GDSync.expose_func(pickupObject)
+	GDSync.expose_func(spawn_spike)
 	
 func owner_changed(_owner_id : int) -> void:
 	var is_owner : bool = GDSync.is_gdsync_owner(self)

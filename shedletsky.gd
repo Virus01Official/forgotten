@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-var malice = 100
+var malice = 1
 
 var alive = true
 @export var isKiller = false
