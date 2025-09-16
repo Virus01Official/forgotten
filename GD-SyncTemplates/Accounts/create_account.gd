@@ -28,6 +28,9 @@ func create_account() -> void:
 		account_creation_failed.emit(email, username, password, response_code)
 	
 	busy = false
+	$".".visible = false
+	$"../Login".visible = true
+	$"..".loggedIn = true
 
 func set_error_text(response_code : int) -> void:
 	match(response_code):

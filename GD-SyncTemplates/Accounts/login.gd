@@ -27,6 +27,7 @@ func login() -> void:
 		login_failed.emit(email, response_code)
 	
 	busy = false
+	$"..".loggedIn = true
 
 func set_error_text(response_code : int, response : Dictionary) -> void:
 	match(response_code):
