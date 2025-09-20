@@ -40,7 +40,6 @@ var default_song = preload("res://assets/music/vanity.mp3")
 
 func _ready() -> void:
 	Gamedata.load_progress()
-	#_spawn_player(1)
 	
 	GDSync.connected.connect(connected)
 	GDSync.connection_failed.connect(connection_failed)
@@ -50,12 +49,44 @@ func _ready() -> void:
 	
 	GDSync.lobby_joined.connect(lobby_joined)
 	GDSync.lobby_join_failed.connect(lobby_join_failed)
-
-	start_round()
 	
+	GDSync.start_multiplayer()
+	start_round()
+
+func lobby_created(lobby_name : String) -> void:
+	print("Created lobby ", lobby_name)
+	
+	GDSync.lobby_join(lobby_name)
+	
+func lobby_joined(lobby_name : String) -> void:
+	print("Joined lobby ", lobby_name)
+	
+func lobby_join_failed(lobby_name : String, error : int) -> void:
+	print("Failed to join lobby ", lobby_name)
+	
+	if error == ENUMS.LOBBY_JOIN_ERROR.LOBBY_DOES_NOT_EXIST:
+		print("Lobby doesn't exist ", lobby_name)
+	if error == ENUMS.LOBBY_JOIN_ERROR.LOBBY_IS_CLOSED:
+		print(lobby_name, " is closed")
+	if error == ENUMS.LOBBY_JOIN_ERROR.LOBBY_IS_FULL:
+		print(lobby_name, " is full")
+	if error == ENUMS.LOBBY_JOIN_ERROR.LOBBY_DOES_NOT_EXIST:
+		print(lobby_name, " doesn't exist")
+
+func lobby_creation_failed(lobby_name : String, error : int) -> void:
+	print("Failed to create lobby ", lobby_name)
+	
+	if error == ENUMS.LOBBY_CREATION_ERROR.LOBBY_ALREADY_EXISTS:
+		GDSync.lobby_join(lobby_name)
+	elif error == ENUMS.LOBBY_CREATION_ERROR.NAME_TOO_SHORT:
+		print("Too short")
+	elif error == ENUMS.LOBBY_CREATION_ERROR.LOCAL_PORT_ERROR:
+		print("Port error")
+	elif error == ENUMS.LOBBY_CREATION_ERROR.DATA_TOO_LARGE:
+		print("too much data")
+		
 func connected() -> void:
 	print("connected")
-	
 	GDSync.lobby_create("test")
 	
 func connection_failed(error : int) -> void:
@@ -67,23 +98,6 @@ func connection_failed(error : int) -> void:
 	
 func _on_round_end():
 	Gamedata.save_progress()
-
-func lobby_created(lobby_name : String) -> void:
-	print("Created lobby ", lobby_name)
-	
-	GDSync.lobby_join(lobby_name)
-	
-func lobby_joined(lobby_name : String) -> void:
-	print("Joined lobby ", lobby_name)
-	
-func lobby_join_failed(lobby_name : String, _error : int) -> void:
-	print("Failed to join lobby ", lobby_name)
-
-func lobby_creation_failed(lobby_name : String, error : int) -> void:
-	print("Failed to create lobby ", lobby_name)
-	
-	if error == ENUMS.LOBBY_CREATION_ERROR.LOBBY_ALREADY_EXISTS:
-		GDSync.lobby_join(lobby_name)
 		
 @rpc("any_peer", "call_local")
 func set_killer(player_name: String):

@@ -8,9 +8,12 @@ const MOUSE_SENSITIVITY = 0.003
 var heal_duration := 5.0 # how many seconds the healing takes
 var heal_timer := 0.0
 
+var blocked = false
+
 var survivor_health = {
 	"Chance": 80,
-	"Engineer": 95
+	"Engineer": 95,
+	"Guest": 115
 }
 
 var stunned = false
@@ -217,6 +220,8 @@ func _physics_process(delta: float) -> void:
 					weakness = weakness + 1
 					print("Weakness: ", weakness)
 					effects.text = "Weakness: " + str(weakness)
+			elif selectedSurvivor == "Guest":
+				blocked = true
 							
 	elif Input.is_action_just_pressed("ability2") and not attacking:
 		if isKiller:
