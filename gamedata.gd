@@ -2,11 +2,15 @@ extends Node
 
 var coins: int = 0
 var owned_items: Array[String] = []
+
+# Separate dictionaries for voicelines and chase themes
 var killer_voicelines := {
-	"kill": {},     
+	"kill": {},
 	"intro": {},
 	"victory": {}
 }
+
+var killer_chase_themes := {}  # <-- NEW dictionary just for chase themes
 
 # Example structure
 var shop_items := {
@@ -22,6 +26,9 @@ var shop_items := {
 				"res://assets/voicelines/envy/voiceline3.mp3",
 				"res://assets/voicelines/envy/becca_uwu.mp3",
 				"res://assets/voicelines/envy/voiceline4.mp3",
+			],
+			"chase": [
+				"res://assets/music/Chase.mp3",
 			],
 			"intro": [
 				"res://assets/voicelines/envy/intro1.mp3"
@@ -40,6 +47,9 @@ var shop_items := {
 			"kill": [
 				"res://assets/voicelines/envy/skins/virus/voiceline.mp3",
 				"res://assets/voicelines/envy/voiceline2.mp3"
+			],
+			"chase": [
+				"res://assets/music/Chase.mp3",
 			],
 			"intro": [
 				"res://assets/voicelines/envy/skins/virus/virus_intro.mp3"
@@ -60,8 +70,10 @@ var shop_items := {
 		"limited": false,
 	},
 }
+
 func _ready() -> void:
 	init_default_voicelines()
+	init_default_chase_themes()
 
 func save_progress():
 	var save_data = {
@@ -89,9 +101,13 @@ func add_voiceline(category: String, killer: String, path: String) -> void:
 	if not killer_voicelines[category].has(killer):
 		killer_voicelines[category][killer] = []
 	killer_voicelines[category][killer].append(load(path))
-	
+
+func add_chase_theme(killer: String, path: String) -> void:
+	if not killer_chase_themes.has(killer):
+		killer_chase_themes[killer] = []
+	killer_chase_themes[killer].append(load(path))
+
 func init_default_voicelines() -> void:
-	# Envy has at least one of each type by default
 	if not killer_voicelines["kill"].has("envy"):
 		killer_voicelines["kill"]["envy"] = [
 			load("res://assets/voicelines/envy/voiceline.mp3"),
@@ -110,7 +126,13 @@ func init_default_voicelines() -> void:
 		killer_voicelines["victory"]["envy"] = [
 			load("res://assets/voicelines/envy/glitch.mp3")
 		]
-	
+
+func init_default_chase_themes() -> void:
+	if not killer_chase_themes.has("envy"):
+		killer_chase_themes["envy"] = [
+			load("res://assets/music/Chase.mp3")
+		]
+
 func buy_item(item_id: String) -> bool:
 	if not Gamedata.shop_items.has(item_id):
 		print("No such item:", item_id)
@@ -136,7 +158,10 @@ func buy_item(item_id: String) -> bool:
 	if "unlocks" in item:
 		for category in item.unlocks.keys():
 			for v in item.unlocks[category]:
-				Gamedata.add_voiceline(category, item.killer, v)
+				if category == "chase":
+					Gamedata.add_chase_theme(item.killer, v)
+				else:
+					Gamedata.add_voiceline(category, item.killer, v)
 	
 	Gamedata.save_progress()
 	print("Bought", item_id)
@@ -152,6 +177,9 @@ func grant_item(item_id: String):
 	if "unlocks" in item:
 		for category in item.unlocks.keys():
 			for v in item.unlocks[category]:
-				Gamedata.add_voiceline(category, item.killer, v)
+				if category == "chase":
+					Gamedata.add_chase_theme(item.killer, v)
+				else:
+					Gamedata.add_voiceline(category, item.killer, v)
 	Gamedata.save_progress()
 	print("Granted limited item:", item_id)

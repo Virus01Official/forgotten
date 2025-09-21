@@ -129,4 +129,6 @@ metadata/_custom_type_script = "uid://bjfy1ijgerl07"
 [node name="GUI" parent="." instance=ExtResource("2_onrkg")]
 visible = false
 
+[node name="ChaseMusic" type="AudioStreamPlayer3D" parent="."]
+
 [connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
