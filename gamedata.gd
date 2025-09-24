@@ -3,16 +3,19 @@ extends Node
 var coins: int = 0
 var owned_items: Array[String] = []
 
-# Separate dictionaries for voicelines and chase themes
+# Existing
 var killer_voicelines := {
 	"kill": {},
 	"intro": {},
 	"victory": {}
 }
+var killer_chase_themes := {}
 
-var killer_chase_themes := {}  # <-- NEW dictionary just for chase themes
+# NEW: Dictionary for killer scenes (skins)
+# Example: killer_scenes["envy"] = [PackedScene, PackedScene, ...]
+var killer_scenes := {}
 
-# Example structure
+# Example shop item with model/scene
 var shop_items := {
 	"envy_default_skin": {
 		"type": "skin",
@@ -20,83 +23,41 @@ var shop_items := {
 		"price": 500,
 		"limited": false,
 		"unlocks": {
+			"model": [
+				"res://scenes/killers/envy_default.tscn"
+			],
 			"kill": [
-				"res://assets/voicelines/envy/voiceline.mp3",
-				"res://assets/voicelines/envy/voiceline2.mp3",
-				"res://assets/voicelines/envy/voiceline3.mp3",
-				"res://assets/voicelines/envy/becca_uwu.mp3",
-				"res://assets/voicelines/envy/voiceline4.mp3",
+				"res://assets/voicelines/envy/voiceline.mp3"
 			],
 			"chase": [
-				"res://assets/music/Chase.mp3",
-			],
-			"intro": [
-				"res://assets/voicelines/envy/intro1.mp3"
-			],
-			"victory": [
-				"res://assets/voicelines/envy/victory1.mp3"
+				"res://assets/music/Chase.mp3"
 			]
 		}
 	},
-	"virus": {
+	"virus_skin": {
 		"type": "skin",
 		"killer": "envy",
 		"price": 0,
-		"limited": true, 
+		"limited": true,
 		"unlocks": {
-			"kill": [
-				"res://assets/voicelines/envy/skins/virus/voiceline.mp3",
-				"res://assets/voicelines/envy/voiceline2.mp3"
-			],
-			"chase": [
-				"res://assets/music/Chase.mp3",
+			"model": [
+				"res://scenes/killers/envy_virus.tscn"
 			],
 			"intro": [
 				"res://assets/voicelines/envy/skins/virus/virus_intro.mp3"
-			],
-			"victory": [
-				"res://assets/voicelines/envy/victory1.mp3"
 			]
 		}
-	},
-	"Gambler": {
-		"type": "survivor",
-		"price": 300
-	},
-	"default_slasher": {
-		"type": "skin",
-		"killer": "slasher",
-		"price": 0,
-		"limited": false,
-	},
+	}
 }
 
 func _ready() -> void:
 	init_default_voicelines()
 	init_default_chase_themes()
+	init_default_scenes()
 
-func save_progress():
-	var save_data = {
-		"coins": coins,
-		"owned_items": owned_items
-	}
-	var f = FileAccess.open("user://savegame.json", FileAccess.WRITE)
-	f.store_string(JSON.stringify(save_data))
-	f.close()
-	print("Game saved!")
-
-func load_progress():
-	if not FileAccess.file_exists("user://savegame.json"):
-		print("No save file found, starting fresh")
-		return
-	var f = FileAccess.open("user://savegame.json", FileAccess.READ)
-	var data = JSON.parse_string(f.get_as_text())
-	f.close()
-	if data:
-		coins = data["coins"]
-		owned_items = data["owned_items"]
-	print("Game loaded! Coins:", coins, " Items:", owned_items)
-
+# ======================
+# REGISTER FUNCTIONS
+# ======================
 func add_voiceline(category: String, killer: String, path: String) -> void:
 	if not killer_voicelines[category].has(killer):
 		killer_voicelines[category][killer] = []
@@ -107,24 +68,20 @@ func add_chase_theme(killer: String, path: String) -> void:
 		killer_chase_themes[killer] = []
 	killer_chase_themes[killer].append(load(path))
 
+func add_scene(killer: String, path: String) -> void:  # <-- NEW
+	if not killer_scenes.has(killer):
+		killer_scenes[killer] = []
+	var scene: PackedScene = load(path)
+	if scene:
+		killer_scenes[killer].append(scene)
+
+# ======================
+# DEFAULTS
+# ======================
 func init_default_voicelines() -> void:
 	if not killer_voicelines["kill"].has("envy"):
 		killer_voicelines["kill"]["envy"] = [
-			load("res://assets/voicelines/envy/voiceline.mp3"),
-			load("res://assets/voicelines/envy/voiceline2.mp3"),
-			load("res://assets/voicelines/envy/voiceline3.mp3"),
-			load("res://assets/voicelines/envy/becca_uwu.mp3"),
-			load("res://assets/voicelines/envy/voiceline4.mp3")
-		]
-
-	if not killer_voicelines["intro"].has("envy"):
-		killer_voicelines["intro"]["envy"] = [
-			load("res://assets/voicelines/envy/glitch.mp3")
-		]
-
-	if not killer_voicelines["victory"].has("envy"):
-		killer_voicelines["victory"]["envy"] = [
-			load("res://assets/voicelines/envy/glitch.mp3")
+			load("res://assets/voicelines/envy/voiceline.mp3")
 		]
 
 func init_default_chase_themes() -> void:
@@ -133,6 +90,15 @@ func init_default_chase_themes() -> void:
 			load("res://assets/music/Chase.mp3")
 		]
 
+func init_default_scenes() -> void:  # <-- NEW
+	if not killer_scenes.has("envy"):
+		killer_scenes["envy"] = [
+			load("res://scenes/killers/envy_default.tscn")
+		]
+
+# ======================
+# SHOP
+# ======================
 func buy_item(item_id: String) -> bool:
 	if not Gamedata.shop_items.has(item_id):
 		print("No such item:", item_id)
@@ -158,10 +124,13 @@ func buy_item(item_id: String) -> bool:
 	if "unlocks" in item:
 		for category in item.unlocks.keys():
 			for v in item.unlocks[category]:
-				if category == "chase":
-					Gamedata.add_chase_theme(item.killer, v)
-				else:
-					Gamedata.add_voiceline(category, item.killer, v)
+				match category:
+					"chase":
+						Gamedata.add_chase_theme(item.killer, v)
+					"model":   # <-- NEW
+						Gamedata.add_scene(item.killer, v)
+					_:
+						Gamedata.add_voiceline(category, item.killer, v)
 	
 	Gamedata.save_progress()
 	print("Bought", item_id)
@@ -177,9 +146,12 @@ func grant_item(item_id: String):
 	if "unlocks" in item:
 		for category in item.unlocks.keys():
 			for v in item.unlocks[category]:
-				if category == "chase":
-					Gamedata.add_chase_theme(item.killer, v)
-				else:
-					Gamedata.add_voiceline(category, item.killer, v)
+				match category:
+					"chase":
+						Gamedata.add_chase_theme(item.killer, v)
+					"model":   # <-- NEW
+						Gamedata.add_scene(item.killer, v)
+					_:
+						Gamedata.add_voiceline(category, item.killer, v)
 	Gamedata.save_progress()
 	print("Granted limited item:", item_id)

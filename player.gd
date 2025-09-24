@@ -119,12 +119,21 @@ func _ready() -> void:
 	
 	GDSync.expose_func(pickupObject)
 	GDSync.expose_func(spawn_spike)
+	play_chase()
 	
 func owner_changed(_owner_id : int) -> void:
 	var is_owner : bool = GDSync.is_gdsync_owner(self)
 	
 	camera.current = is_owner
 	GUI.visible = is_owner
+	
+func play_chase():
+	var themes = Gamedata.killer_chase_themes.get("envy", [])
+	if themes.size() > 0 and isKiller:
+		var chase_theme = themes[0] # first chase theme
+		$ChaseMusic.stream = chase_theme
+		$ChaseMusic.play()
+
 	
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
