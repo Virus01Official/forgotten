@@ -53,7 +53,6 @@ var shop_items := {
 func _ready() -> void:
 	init_default_voicelines()
 	init_default_chase_themes()
-	init_default_scenes()
 
 # ======================
 # REGISTER FUNCTIONS
@@ -90,11 +89,11 @@ func init_default_chase_themes() -> void:
 			load("res://assets/music/Chase.mp3")
 		]
 
-func init_default_scenes() -> void:  # <-- NEW
-	if not killer_scenes.has("envy"):
-		killer_scenes["envy"] = [
-			load("res://scenes/killers/envy_default.tscn")
-		]
+#func init_default_scenes() -> void:  # <-- NEW
+	#if not killer_scenes.has("envy"):
+		#killer_scenes["envy"] = [
+		#	load("res://scenes/killers/envy_default.tscn")
+		#]
 
 # ======================
 # SHOP
@@ -155,3 +154,28 @@ func grant_item(item_id: String):
 						Gamedata.add_voiceline(category, item.killer, v)
 	Gamedata.save_progress()
 	print("Granted limited item:", item_id)
+	
+# ======================
+# SAVE / LOAD
+# ======================
+func save_progress():
+	var save_data = {
+		"coins": coins,
+		"owned_items": owned_items
+	}
+	var f = FileAccess.open("user://savegame.json", FileAccess.WRITE)
+	f.store_string(JSON.stringify(save_data))
+	f.close()
+	print("Game saved!")
+
+func load_progress():
+	if not FileAccess.file_exists("user://savegame.json"):
+		print("No save file found, starting fresh")
+		return
+	var f = FileAccess.open("user://savegame.json", FileAccess.READ)
+	var data = JSON.parse_string(f.get_as_text())
+	f.close()
+	if data:
+		coins = data["coins"]
+		owned_items = data["owned_items"]
+	print("Game loaded! Coins:", coins, " Items:", owned_items)

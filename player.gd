@@ -10,6 +10,12 @@ var heal_timer := 0.0
 
 var blocked = false
 
+var current_speed = WALK_SPEED
+
+var slasher_ability4_active: bool = false
+var slasher_ability4_timer: float = 0.0
+const SLASHER_ABILITY4_DURATION: float = 5.0
+
 var survivor_health = {
 	"Chance": 80,
 	"Engineer": 95,
@@ -284,13 +290,19 @@ func _physics_process(delta: float) -> void:
 				luckToken = 0
 	elif Input.is_action_just_pressed("ability4") and not attacking:
 		if isKiller:
-			return
+			if selectedKiller == "Slasher":
+				current_speed = WALK_SPEED * 0.5
+				slasher_ability4_active = true
+				slasher_ability4_timer = SLASHER_ABILITY4_DURATION
+				if slasher_ability4_active:
+					slasher_ability4_timer -= delta
+					if slasher_ability4_timer <= 0:
+						slasher_ability4_active = false
+						print("Slasher ability4 ended")
 		else:
 			if selectedSurvivor == "Chance" and luckToken == 3:
 				luckToken = 0
 				weakness = 0
-						
-	var current_speed = WALK_SPEED
 	
 	if cola_active:
 		cola_timer -= delta
