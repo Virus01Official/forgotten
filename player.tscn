@@ -68,6 +68,7 @@ fov = 37.8493
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.0509764, -0.9987, 0, 0.9987, 0.0509764, 0, -0.060737, -1.07594)
+visible = false
 mesh = SubResource("PlaneMesh_hqtel")
 
 [node name="hitbox" type="Area3D" parent="."]

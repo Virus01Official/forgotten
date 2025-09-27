@@ -89,84 +89,6 @@ texture_normal = ExtResource("1_80edf")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="TextureButton3" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 1002.0
-offset_top = 506.0
-offset_right = 1087.0
-offset_bottom = 598.0
-texture_normal = ExtResource("1_80edf")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label" type="Label" parent="TextureButton3"]
-layout_mode = 0
-offset_right = 83.0
-offset_bottom = 23.0
-text = "T"
-
-[node name="TextureButton4" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 901.0
-offset_top = 511.0
-offset_right = 986.0
-offset_bottom = 603.0
-texture_normal = ExtResource("1_80edf")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label2" type="Label" parent="TextureButton4"]
-layout_mode = 0
-offset_left = 2.0
-offset_top = 6.0
-offset_right = 85.0
-offset_bottom = 29.0
-text = "R"
-
-[node name="TextureButton5" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 791.0
-offset_top = 513.0
-offset_right = 876.0
-offset_bottom = 605.0
-texture_normal = ExtResource("1_80edf")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label3" type="Label" parent="TextureButton5"]
-layout_mode = 0
-offset_left = 9.0
-offset_top = -1.0
-offset_right = 92.0
-offset_bottom = 22.0
-text = "Q"
-
-[node name="Token" type="Label" parent="TextureButton5"]
-layout_mode = 0
-offset_left = 4.0
-offset_top = -24.0
-offset_right = 87.0
-offset_bottom = -1.0
-text = "0"
-
-[node name="TextureButton6" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 691.0
-offset_top = 513.0
-offset_right = 776.0
-offset_bottom = 605.0
-texture_normal = ExtResource("1_80edf")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label3" type="Label" parent="TextureButton6"]
-layout_mode = 0
-offset_left = 9.0
-offset_top = -1.0
-offset_right = 92.0
-offset_bottom = 22.0
-text = "E"
-
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 0
 offset_left = 982.0
@@ -187,3 +109,76 @@ offset_right = 719.0
 offset_bottom = 500.0
 max_value = 10.0
 show_percentage = false
+
+[node name="Container" type="Container" parent="."]
+layout_mode = 0
+offset_left = 676.0
+offset_top = 484.0
+offset_right = 1153.0
+offset_bottom = 649.0
+
+[node name="AbilityContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 624.0
+offset_top = 514.0
+offset_right = 1148.0
+offset_bottom = 642.0
+theme_override_constants/separation = 4
+
+[node name="Ability1" type="TextureButton" parent="AbilityContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_80edf")
+stretch_mode = 0
+
+[node name="Label3" type="Label" parent="AbilityContainer/Ability1"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = -1.0
+offset_right = 92.0
+offset_bottom = 22.0
+text = "E"
+
+[node name="Ability2" type="TextureButton" parent="AbilityContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_80edf")
+stretch_mode = 0
+
+[node name="Label3" type="Label" parent="AbilityContainer/Ability2"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = -1.0
+offset_right = 92.0
+offset_bottom = 22.0
+text = "Q"
+
+[node name="Token" type="Label" parent="AbilityContainer/Ability2"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -24.0
+offset_right = 87.0
+offset_bottom = -1.0
+text = "0"
+
+[node name="Ability3" type="TextureButton" parent="AbilityContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_80edf")
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AbilityContainer/Ability3"]
+layout_mode = 0
+offset_right = 83.0
+offset_bottom = 23.0
+text = "T"
+
+[node name="Ability4" type="TextureButton" parent="AbilityContainer"]
+layout_mode = 2
+texture_normal = ExtResource("1_80edf")
+stretch_mode = 0
+
+[node name="Label2" type="Label" parent="AbilityContainer/Ability4"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 6.0
+offset_right = 85.0
+offset_bottom = 29.0
+text = "R"

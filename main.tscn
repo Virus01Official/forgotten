@@ -173,6 +173,10 @@ visible = false
 mesh = SubResource("BoxMesh_7mycd")
 skeleton = NodePath("../CollisionShape3D")
 
+[node name="Label3D" type="Label3D" parent="Doe"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.7953014, 0)
+text = "Killer"
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 

@@ -22,6 +22,37 @@ var survivor_health = {
 	"Guest": 115
 }
 
+@onready var ability_slots = [
+	$GUI/AbilityContainer/Ability1,
+	$GUI/AbilityContainer/Ability2,
+	$GUI/AbilityContainer/Ability3,
+	$GUI/AbilityContainer/Ability4
+]
+
+var ability_icons = {
+	"envy": [
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+	],
+	"Slasher": [
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+	],
+	"Chance": [
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+	],
+	"Guest": [
+		preload("res://assets/textures/abilityTemplate.png"),
+		preload("res://assets/textures/abilityTemplate.png"),
+	]
+}
+
+
 var stunned = false
 var stun_timer: float = 0.0
 
@@ -95,7 +126,6 @@ var damage = 20
 @onready var Stamina = $GUI/Stamina
 @onready var Health = $GUI/Health
 @onready var effects = $GUI/GridContainer/Label
-@onready var tokensGui = $GUI/TextureButton5/Token
 @onready var healthText = $GUI/Health/Label
 @onready var StaminaText = $GUI/Stamina/Label
 @onready var healingBar = $GUI/ProgressBar
@@ -126,6 +156,7 @@ func _ready() -> void:
 	GDSync.expose_func(pickupObject)
 	GDSync.expose_func(spawn_spike)
 	play_chase()
+	update_abilities_ui()
 	
 func owner_changed(_owner_id : int) -> void:
 	var is_owner : bool = GDSync.is_gdsync_owner(self)
@@ -177,7 +208,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		
-	tokensGui.text = str(luckToken)
+	#tokensGui.text = str(luckToken)
 	
 	Health.max_value = maxhealth
 	healthText.text = str(health) + "/" + str(maxhealth)
@@ -407,7 +438,25 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, WALK_SPEED)
 
 	move_and_slide()
+
+func update_abilities_ui():
+	var char_name = selectedKiller if isKiller else selectedSurvivor
 	
+	if not ability_icons.has(char_name):
+		# Hide all slots if character has no abilities
+		for slot in ability_slots:
+			slot.visible = false
+		return
+	
+	var icons = ability_icons[char_name]
+	
+	for i in range(ability_slots.size()):
+		if i < icons.size():
+			ability_slots[i].texture_normal = icons[i]
+			ability_slots[i].visible = true
+		else:
+			ability_slots[i].visible = false
+
 func _on_hitbox_body_entered(body: Node) -> void:
 	if body is CharacterBody3D and body != self and body.health > 0:
 		body.health = body.health - damage
