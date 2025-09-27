@@ -51,7 +51,7 @@ _data = {
 &"RESET": SubResource("Animation_hqtel")
 }
 
-[node name="player" type="CharacterBody3D"]
+[node name="player" type="CharacterBody3D" groups=["players"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1294823, 0)
 script = ExtResource("1_4flbx")
 metadata/Type = ""

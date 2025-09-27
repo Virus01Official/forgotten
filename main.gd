@@ -51,7 +51,6 @@ func _ready() -> void:
 	GDSync.lobby_join_failed.connect(lobby_join_failed)
 	
 	GDSync.start_multiplayer()
-	start_round()
 
 func lobby_created(lobby_name : String) -> void:
 	print("Created lobby ", lobby_name)
@@ -88,6 +87,7 @@ func lobby_creation_failed(lobby_name : String, error : int) -> void:
 func connected() -> void:
 	print("connected")
 	GDSync.lobby_create("test")
+	start_round()
 	
 func connection_failed(error : int) -> void:
 	match(error):
@@ -99,7 +99,6 @@ func connection_failed(error : int) -> void:
 func _on_round_end():
 	Gamedata.save_progress()
 		
-@rpc("any_peer", "call_local")
 func set_killer(player_name: String):
 	var killer = get_node_or_null(player_name)
 	if killer:
@@ -180,4 +179,4 @@ func start_round() -> void:
 	print(killer.name, " is the killer for this round with malice: ", killer.malice)
 
 	# 👇 tell clients who the killer is
-	rpc("set_killer", killer.name)
+	set_killer(killer.name)

@@ -17,6 +17,7 @@ func client_joined(client_id : int) -> void:
 	add_child(player)
 	player.name = str(client_id)
 	GDSync.set_gdsync_owner(player, client_id)
+	player.add_to_group("players")
 
 func client_left(client_id : int) -> void:
 	print("Client left ", client_id)

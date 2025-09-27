@@ -149,7 +149,6 @@ var sprint_needs_reset: bool = false
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	add_to_group("players")
 	
 	GDSync.connect_gdsync_owner_changed(self, owner_changed)
 	

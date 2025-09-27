@@ -3,7 +3,7 @@ extends CharacterBody3D
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
-var malice = 1
+var malice = 0
 
 @export var isKiller = true
 
