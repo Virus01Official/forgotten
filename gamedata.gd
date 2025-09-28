@@ -1,6 +1,6 @@
 extends Node
 
-var coins: int = 0
+var coins : int = 0
 var owned_items: Array[String] = []
 
 # Existing

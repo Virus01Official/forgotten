@@ -87,7 +87,6 @@ func lobby_creation_failed(lobby_name : String, error : int) -> void:
 func connected() -> void:
 	print("connected")
 	GDSync.lobby_create("test")
-	start_round()
 	
 func connection_failed(error : int) -> void:
 	match(error):
